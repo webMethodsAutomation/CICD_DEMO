@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DeployerSpec exitOnError="true" sourceType="Repository">
+	<DeployerServer>
+		<host>DESKTOP-2R1CM4N:5555</host>
+		<user>Administrator</user>
+		<pwd>manage</pwd>
+	</DeployerServer>
+  <Environment>
+		<IS>
+			<isalias name="Target">
+				<host>DESKTOP-2R1CM4N</host>
+				<port>2222</port>
+				<user>Administrator</user>
+				<pwd>manage</pwd>
+				<useSSL>false</useSSL>
+				<version>10.5</version>
+				<installDeployerResource>true</installDeployerResource>
+				<Test>true</Test>
+			</isalias>
+		</IS>
+		<Repository>
+			<repalias name="Fibonachi">
+				<type>FlatFile</type>
+				<urlOrDirectory>C:/Demo/CICD/jenkins_workspace/build/is</urlOrDirectory>
+				<Test>false</Test>
+			</repalias>
+		</Repository>	
+	</Environment>
+
+	<Projects projectPrefix="">
+		<Project description="Deployment of IS artefacts" name="MRD_IS_v1.0" overwrite="true" type="Repository">
+			<ProjectProperties>
+				<Property name= "projectLocking">false</Property>
+				<Property name= "concurrentDeployment">true</Property>
+				<Property name= "ignoreMissingDependencies">true</Property>
+				<Property name= "isTransactionalDeployment">true</Property>
+			</ProjectProperties>
+
+			<DeploymentSet autoResolve="ignore" description="IS Deployment Set" name="ISDepSet" srcAlias="Fibonachi">
+				<!--  The Composite and Component Constructs are independant of the Namespace Types. The Project Automator will support all the Namespace Types -->		
+				<Composite name="Fib*" srcAlias="Fibonachi" type="IS"/>
+			</DeploymentSet>
+			<DeploymentMap description="IS Deployment Map" name="ISDepMap"/>			
+			<MapSetMapping mapName="ISDepMap" setName="ISDepSet">				
+				<alias type="IS">Target</alias>
+			</MapSetMapping>
+			<DeploymentCandidate description="IS Deployment Candidate" mapName="ISDepMap" name="ISDepCan"/>
+		</Project>
+	</Projects>
+</DeployerSpec>
